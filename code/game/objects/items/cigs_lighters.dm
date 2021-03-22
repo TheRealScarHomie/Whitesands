@@ -107,6 +107,8 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /obj/item/match/firebrand/Initialize()
 	. = ..()
 	matchignite()
+/*
+		WS Edit - Moved to modular folder
 
 //////////////////
 //FINE SMOKABLES//
@@ -354,6 +356,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	desc = "A Xeno Filtered brand cigarette."
 	list_reagents = list (/datum/reagent/drug/nicotine = 20, /datum/reagent/medicine/regen_jelly = 15, /datum/reagent/drug/krokodil = 4)
 
+
 // Rollies.
 
 /obj/item/clothing/mask/cigarette/rollie
@@ -418,6 +421,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 ////////////
 // CIGARS //
 ////////////
+
 /obj/item/clothing/mask/cigarette/cigar
 	name = "premium cigar"
 	desc = "A brown roll of tobacco and... well, you're not quite sure. This thing's huge!"
@@ -430,6 +434,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	smoketime = 300 // 11 minutes
 	chem_volume = 40
 	list_reagents = list(/datum/reagent/drug/nicotine = 25)
+
 
 /obj/item/clothing/mask/cigarette/cigar/cohiba
 	name = "\improper Cohiba Robusto cigar"
@@ -465,6 +470,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	desc = "A manky old cigar butt."
 	icon_state = "cigarbutt"
 
+*/
 /////////////////
 //SMOKING PIPES//
 /////////////////
@@ -473,8 +479,8 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	desc = "A pipe, for smoking. Probably made of meerschaum or something."
 	icon_state = "pipeoff"
 	item_state = "pipeoff"
-	icon_on = "pipeon"  //Note - these are in masks.dmi
-	icon_off = "pipeoff"
+	var/icon_on = "pipeon"  //Note - these are in masks.dmi 	WS EDIT - Cigarettes
+	var/icon_off = "pipeoff"	//WS EDIT - Cigarettes
 	smoketime = 0
 	chem_volume = 100
 	list_reagents = null
@@ -793,7 +799,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(istype(target, /obj/item/reagent_containers/food/snacks/grown))
 		var/obj/item/reagent_containers/food/snacks/grown/O = target
 		if(O.dry)
-			var/obj/item/clothing/mask/cigarette/rollie/R = new /obj/item/clothing/mask/cigarette/rollie(user.loc)
+			var/obj/item/clothing/mask/cigarette/rollie/R = new /obj/item/clothing/mask/cigarette/rollie/custom(user.loc) //WHITE SANDS EDIT - ROLLIES
 			R.chem_volume = target.reagents.total_volume
 			target.reagents.trans_to(R, R.chem_volume, transfered_by = user)
 			qdel(target)
