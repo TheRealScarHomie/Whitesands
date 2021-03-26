@@ -574,7 +574,6 @@
 		/obj/item/storage/fancy/cigarettes/cigpack_donkco,	//WS EDIT - Cigarettes
 		/obj/item/storage/fancy/cigarettes/cigpack_waffleco,	//WS EDIT - Cigarettes
 		/obj/item/storage/fancy/cigarettes/cigpack_solgov,	//WS EDIT - Cigarettes
-		/obj/item/storage/fancy/cigarettes/cigpack_superfresh,	//WS EDIT - Cigarettes
 		/obj/item/storage/fancy/cigarettes/cigpack_turbo)	//WS EDIT - Cigarettes
 	. = ..()
 

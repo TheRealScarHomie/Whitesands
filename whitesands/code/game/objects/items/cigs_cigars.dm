@@ -1,5 +1,5 @@
 #define CIGARETTE	3.6
-#define CIGAR	7.2
+#define CIGAR	6
 #define SMOKEMINUTE SECONDS*6
 
 //Cigarettes - PACKETS
@@ -194,6 +194,9 @@
 	name = "cigarette"
 	desc = "A roll of tobacco and nicotine."
 	icon = 'whitesands/icons/obj/cigarettes.dmi'
+	mob_overlay_icon = 'whitesands/icons/mob/clothing/cigarettes.dmi'
+	lefthand_file = 'whitesands/icons/mob/inhands/equipment/cigarettes_lefthand.dmi'
+	righthand_file = 'whitesands/icons/mob/inhands/equipment/cigarettes_righthand.dmi'
 	icon_state = "standard"
 	item_state = "standard"
 	throw_speed = 0.5
@@ -229,18 +232,19 @@
 	desc = "A suspicious looking, unbranded cigarette."
 	icon_state = "syndicate"
 	list_reagents = list(/datum/reagent/drug/nicotine = 10, /datum/reagent/medicine/omnizine = 15)
+	smoke_all = TRUE
 	smoke_type = "syndicate"
 
 /obj/item/clothing/mask/cigarette/donkco
 	desc = "A donk-co branded cigarette, hunger for those without time or hands."
 	icon_state = "donk"
-	list_reagents = list(/datum/reagent/drug/nicotine = 5, /datum/reagent/consumable/nutriment/stabilized = 5, /datum/reagent/medicine/omnizine = 2)
+	list_reagents = list(/datum/reagent/drug/nicotine = 10, /datum/reagent/consumable/nutriment/stabilized = 5, /datum/reagent/medicine/omnizine = 2)
 	smoke_type = "donk"
 
 /obj/item/clothing/mask/cigarette/waffleco
 	desc = "A waffle-co branded cigarette, it smells amazing."
 	icon_state = "waffle"
-	list_reagents = list(/datum/reagent/drug/nicotine = 5, /datum/reagent/consumable/corn_syrup = 14, /datum/reagent/consumable/honey = 1)
+	list_reagents = list(/datum/reagent/drug/nicotine = 10, /datum/reagent/consumable/corn_syrup = 14, /datum/reagent/consumable/honey = 1)
 	smoke_type = "waffle"
 
 /obj/item/clothing/mask/cigarette/waffleco/Initialize()
@@ -262,12 +266,14 @@
 
 /obj/item/clothing/mask/cigarette/superfresh/Initialize()
 	. = ..()
-	list_reagents = list(/datum/reagent/drug/nicotine = 5, get_random_reagent_id() = rand(5,20))
+	list_reagents = list(/datum/reagent/drug/nicotine = 10, get_random_reagent_id() = rand(5,20))
+	grind_results = list_reagents
 
 /obj/item/clothing/mask/cigarette/xeno
 	desc = "A Xeno Filtered brand cigarette."
 	icon_state = "slime"
 	list_reagents = list (/datum/reagent/drug/nicotine = 20, /datum/reagent/medicine/regen_jelly = 15, /datum/reagent/drug/krokodil = 4)
+	smoke_all = TRUE
 	smoke_type = "slime"
 
 //Rollies - ITEMS
@@ -279,6 +285,7 @@
 	smoke_type = "boof"
 	chem_volume = 50
 	lit_type = "joint"
+	list_reagents = list(/datum/reagent/drug/space_drugs = 35)
 
 /obj/item/clothing/mask/cigarette/rollie/Initialize()
 	. = ..()
@@ -291,7 +298,7 @@
 
 /obj/item/clothing/mask/cigarette/rollie/turbo
 	desc = "A turbo branded rollie, for the good times."
-	list_reagents = list(/datum/reagent/drug/nicotine = 5, /datum/reagent/drug/space_drugs = 5, /datum/reagent/drug/happiness = 10)
+	list_reagents = list(/datum/reagent/drug/nicotine = 15, /datum/reagent/drug/space_drugs = 10, /datum/reagent/drug/happiness = 10)
 
 /obj/item/clothing/mask/cigarette/rollie/trippy
 	list_reagents = list(/datum/reagent/drug/nicotine = 15, /datum/reagent/drug/mushroomhallucinogen = 35)
@@ -308,14 +315,16 @@
 	icon_state = "cigar"
 	smoketime = 10 SMOKEMINUTE
 	chem_volume = 40
-	list_reagents = list(/datum/reagent/drug/nicotine = 25)
+	list_reagents = list(/datum/reagent/drug/nicotine = 35)
 	lit_type = "cigar"
+	smoke_type = "cigar"
 
 /obj/item/clothing/mask/cigarette/cigar/robusto
 	name = "robusto cigar"
 	desc = "A hefty wad of nicotine and robusting goodness."
 	icon_state = "robusto"
 	smoketime = 20 SMOKEMINUTE
+	chem_volume = 60
 	list_reagents = list(/datum/reagent/drug/nicotine = 30, /datum/reagent/consumable/grey_bull = 10)
 	smoke_type = "robusto"
 
@@ -324,7 +333,9 @@
 	desc = "The Elite Cigar, for the truly robust."
 	icon_state = "gold"
 	smoketime = 30 SMOKEMINUTE
-	list_reagents = list(/datum/reagent/drug/nicotine = 30, /datum/reagent/gold = 10)
+	chem_volume = 80
+	chain_smoking_damage = 0.005 //15 minutes of smoke damage
+	list_reagents = list(/datum/reagent/drug/nicotine = 60, /datum/reagent/gold = 10)
 	smoke_type = "gold"
 
 /obj/item/clothing/mask/cigarette/cigar/havana
@@ -332,7 +343,8 @@
 	desc = "A cigar fit for only the best of the best."
 	icon_state = "gold"
 	smoketime = 30 SMOKEMINUTE
-	list_reagents = list(/datum/reagent/drug/nicotine = 15)
+	chain_smoking_damage = 0 //badass antag only cigar, no cancer
+	list_reagents = list(/datum/reagent/drug/nicotine = 35)
 	smoke_type = "gold"
 
 /obj/item/clothing/mask/cigarette/cigar/cohiba
@@ -386,6 +398,7 @@
 	if(!(flags_1 & INITIALIZED_1))
 		return
 
+	item_state = "[item_state]_lit"
 	lit = TRUE
 	name = "lit [name]"
 	attack_verb = list("burnt", "singed")
@@ -428,6 +441,7 @@
 	STOP_PROCESSING(SSobj, src)
 	reagents.flags |= NO_REACT
 	lit = FALSE
+	item_state = "[item_state]_extinguished"
 	if(ismob(loc))
 		var/mob/living/M = loc
 		to_chat(M, "<span class='notice'>Your [name] goes out.</span>")
@@ -441,6 +455,7 @@
 
 /obj/item/clothing/mask/cigarette/Initialize()
 	. = ..()
+	item_state = lit_type
 	create_reagents(chem_volume, INJECTABLE | NO_REACT)
 	if(list_reagents)
 		reagents.add_reagent_list(list_reagents)
@@ -493,18 +508,17 @@
 		return
 	open_flame()
 	shmoke()
-	update_overlays()
 	switch(smoketime)
-		if(216 to 288)
+		if(288)
 			icon_state = "[smoke_type]_1"
 			update_overlays()
-		if(144 to 215)
+		if(215)
 			icon_state = "[smoke_type]_2"
 			update_overlays()
-		if(72 to 143)
+		if(143)
 			icon_state = "[smoke_type]_3"
 			update_overlays()
-		if(0 to 71)
+		if(71)
 			icon_state = "[smoke_type]_4"
 			update_overlays()
 	if((reagents && reagents.total_volume) && (nextdragtime <= world.time))
@@ -579,72 +593,78 @@
 	if(!lit)
 		lit_or_extinguished = "extinguished"
 	if(lit || !lit)
+		var/mutable_appearance/LT = mutable_appearance(icon_state = "[lit_type]_[lit_or_extinguished]")
 		switch(smoketime)
 			if(360 to 1800)
-				add_overlay(image(icon, icon_state = "[lit_type]_[lit_or_extinguished]"))
-			if(216 to 288)
+				add_overlay(LT)
+			if(288)
 				cut_overlays()
-				add_overlay(image(icon, icon_state = "[lit_type]_[lit_or_extinguished]", pixel_x = 2, pixel_y = 2))
-			if(144 to 215)
+				LT.pixel_x = 2
+				LT.pixel_y = 2
+				add_overlay(LT)
+			if(215)
 				cut_overlays()
-				add_overlay(image(icon, icon_state = "[lit_type]_[lit_or_extinguished]", pixel_x = 4, pixel_y = 4))
-			if(72 to 143)
+				LT.pixel_x = 4
+				LT.pixel_y = 4
+				add_overlay(LT)
+			if(143)
 				cut_overlays()
-				add_overlay(image(icon, icon_state = "[lit_type]_[lit_or_extinguished]", pixel_x = 5, pixel_y = 5))
-			if(0 to 71)
+				LT.pixel_x = 5
+				LT.pixel_y = 5
+				add_overlay(LT)
+			if(71)
 				cut_overlays()
-				add_overlay(image(icon, icon_state = "[lit_type]_[lit_or_extinguished]", pixel_x = 6, pixel_y = 6))
+				LT.pixel_x = 6
+				LT.pixel_y = 6
+				add_overlay(LT)
 	. = ..()
-
 
 /obj/item/clothing/mask/cigarette/proc/shmoke()
 	if(iscarbon(loc))
 		var/mob/living/carbon/C = loc
 		var/obj/item/organ/lungs/L = C.getorganslot(ORGAN_SLOT_LUNGS)
 		if(src == C.wear_mask)
-			if(L && !(L.organ_flags & ORGAN_SYNTHETIC))
+			if(L && !(L.organ_flags & ORGAN_SYNTHETIC) && L.chain_smokah < 100)
 				L.chain_smokah += chain_smoking_damage
-		else if(!(src == C.wear_mask) && (L.chain_smokah) >= (1*CIGARETTE) && !(L.resetting)) //no cigarrette in mouth, has smoked at least 1 cigarette
-			addtimer(CALLBACK(src, .proc/resetcancer), 120)
-			L.resetting = TRUE
-
-/obj/item/clothing/mask/cigarette/proc/resetcancer()
-	var/mob/living/carbon/C = iscarbon(owner)
-	var/obj/item/organ/lungs/L = C.getorganslot(ORGAN_SLOT_LUNGS)
-	L.resetting = FALSE
-	L.chain_smokah = 0
-	return
+		else if(!(src == C.wear_mask) && (L.chain_smokah) >= (7.2)) //no cigarrette in mouth, has smoked at least 2 cigarette
+			L.chain_smokah -= 0.6 //dissipates 1 cigarette smoked a minute
 
 /obj/item/organ/lungs
 	var/chain_smokah = 0
-	var/resetting = FALSE
 
 /obj/item/organ/lungs/on_life()
 	. = ..()
 	switch(chain_smokah)
-		if((3*CIGARETTE)) //2 cigar
-			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.3)
-			to_chat(owner, "<span class='danger'>[pick("You're having difficulty breathing.", "Your breathing becomes heavy.")]</span>")
-			if(prob(2))
+		if(10.8 to 14.3) //3 cigarettes
+			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.01)
+			if(prob(1))
+				to_chat(owner, "<span class='danger'>[pick("You're having difficulty breathing.", "Your breathing becomes heavy.")]</span>")
+			if(prob(5))
 				owner.emote(pick("cough","yawn"))
-		if((4*CIGARETTE))
-			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.5)
+		if(14.4 to 17.9) //4 cigarettes
+			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.02)
+			if(prob(1))
+				to_chat(owner, "<span class='danger'>[pick("You're having difficulty breathing.", "Your breathing becomes heavy.")]</span>")
 			if(prob(5))
 				owner.emote(pick("cough","yawn","twitch_s"))
 			if(prob(1))
 				owner.Jitter(8)
-		if((5*CIGARETTE)) //3 cigar
-			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.7)
-			to_chat(owner, "<span class='userdanger'>[pick("You find it extremely hard to breathe!", "Your eyes water and throat fills with smog!")]</span>")
+		if(18 to 21.5) //5 cigarettes
+			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.03)
+			if(prob(1))
+				to_chat(owner, "<span class='userdanger'>[pick("Your throat itches with dryness, it is very hard to breathe!", "Your eyes water and throat fills with smog!")]</span>")
+				owner.emote("cough")
 			if(prob(7))
 				owner.emote(pick("cough","yawn","twitch_s","sway"))
 			if(prob(2))
 				owner.Jitter(8)
 			if(prob(1))
-				owner.blur_eyes(6)
-		if((6*CIGARETTE))
+				owner.blur_eyes(10)
+		if(21.6 to 25.1) //6 cigarettes
 			var/list/screens = list(owner.hud_used.plane_masters["[FLOOR_PLANE]"], owner.hud_used.plane_masters["[GAME_PLANE]"], owner.hud_used.plane_masters["[LIGHTING_PLANE]"])
-			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 1)
+			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 0.04)
+			if(prob(1))
+				to_chat(owner, "<span class='userdanger'>[pick("Your throat itches with dryness, it is very hard to breathe!", "Your eyes water and throat fills with smog!")]</span>")
 			if(prob(10))
 				owner.emote(pick("cough","yawn","twitch_s","sway","gasp"))
 			if(prob(5))
@@ -655,10 +675,12 @@
 				for(var/whole_screen in screens)
 					animate(whole_screen, transform = matrix(5, MATRIX_ROTATE), time = 5, easing = QUAD_EASING, loop = -1)
 					animate(transform = matrix(-5, MATRIX_ROTATE), time = 5, easing = QUAD_EASING)
-		if((7*CIGARETTE)) //4 cigar
+		if(25.2 to 100) //7 cigarettes
 			var/list/screens = list(owner.hud_used.plane_masters["[FLOOR_PLANE]"], owner.hud_used.plane_masters["[GAME_PLANE]"], owner.hud_used.plane_masters["[LIGHTING_PLANE]"])
-			to_chat(owner, "<span class='userdanger'>[pick("You find it impossible to breathe!")]</span>")
-			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 4)
+			owner.adjustOrganLoss(ORGAN_SLOT_LUNGS, 1)
+			if(prob(1))
+				to_chat(owner, "<span class='userdanger'>[pick("You take a hearty gasp! Finding it near impossible to breathe!")]</span>")
+				owner.emote("gasp")
 			if(prob(15))
 				owner.emote(pick("cough","yawn","twitch_s","sway","gasp"))
 			if(prob(10))
