@@ -195,6 +195,7 @@
 	desc = "A roll of tobacco and nicotine."
 	icon = 'whitesands/icons/obj/cigarettes.dmi'
 	mob_overlay_icon = 'whitesands/icons/mob/clothing/cigarettes.dmi'
+	mob_overlay_state = "standard"
 	lefthand_file = 'whitesands/icons/mob/inhands/equipment/cigarettes_lefthand.dmi'
 	righthand_file = 'whitesands/icons/mob/inhands/equipment/cigarettes_righthand.dmi'
 	icon_state = "standard"
@@ -399,6 +400,7 @@
 		return
 
 	item_state = "[item_state]_lit"
+	mob_overlay_state = "[mob_overlay_state]_lit"
 	lit = TRUE
 	name = "lit [name]"
 	attack_verb = list("burnt", "singed")
@@ -442,6 +444,7 @@
 	reagents.flags |= NO_REACT
 	lit = FALSE
 	item_state = "[item_state]_extinguished"
+	mob_overlay_state = "[mob_overlay_state]_extinguished"
 	if(ismob(loc))
 		var/mob/living/M = loc
 		to_chat(M, "<span class='notice'>Your [name] goes out.</span>")
@@ -455,6 +458,7 @@
 
 /obj/item/clothing/mask/cigarette/Initialize()
 	. = ..()
+	mob_overlay_state = lit_type
 	item_state = lit_type
 	create_reagents(chem_volume, INJECTABLE | NO_REACT)
 	if(list_reagents)
